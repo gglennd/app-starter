@@ -15,6 +15,7 @@ export default antfu({
     "docker-compose.yaml",
   ],
   rules: {
+    "react-refresh/only-export-components": ["off"],
     "no-console": ["warn"],
     "perfectionist/sort-imports": ["error", {
       tsconfigRootDir: ".",

@@ -11,15 +11,32 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PageRouteImport } from './routes/_page'
+import { Route as PageIndexRouteImport } from './routes/_page.index'
+import { Route as PageSignupRouteImport } from './routes/_page.signup'
+import { Route as PageLoginRouteImport } from './routes/_page.login'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
 
 const rootServerRouteImport = createServerRootRoute()
 
-const IndexRoute = IndexRouteImport.update({
+const PageRoute = PageRouteImport.update({
+  id: '/_page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PageIndexRoute = PageIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PageRoute,
+} as any)
+const PageSignupRoute = PageSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => PageRoute,
+} as any)
+const PageLoginRoute = PageLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PageRoute,
 } as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
@@ -28,25 +45,32 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/login': typeof PageLoginRoute
+  '/signup': typeof PageSignupRoute
+  '/': typeof PageIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof PageLoginRoute
+  '/signup': typeof PageSignupRoute
+  '/': typeof PageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_page': typeof PageRouteWithChildren
+  '/_page/login': typeof PageLoginRoute
+  '/_page/signup': typeof PageSignupRoute
+  '/_page/': typeof PageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/login' | '/signup' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/login' | '/signup' | '/'
+  id: '__root__' | '/_page' | '/_page/login' | '/_page/signup' | '/_page/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  PageRoute: typeof PageRouteWithChildren
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
@@ -72,12 +96,33 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_page': {
+      id: '/_page'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_page/': {
+      id: '/_page/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PageIndexRouteImport
+      parentRoute: typeof PageRoute
+    }
+    '/_page/signup': {
+      id: '/_page/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof PageSignupRouteImport
+      parentRoute: typeof PageRoute
+    }
+    '/_page/login': {
+      id: '/_page/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PageLoginRouteImport
+      parentRoute: typeof PageRoute
     }
   }
 }
@@ -93,8 +138,22 @@ declare module '@tanstack/react-start/server' {
   }
 }
 
+interface PageRouteChildren {
+  PageLoginRoute: typeof PageLoginRoute
+  PageSignupRoute: typeof PageSignupRoute
+  PageIndexRoute: typeof PageIndexRoute
+}
+
+const PageRouteChildren: PageRouteChildren = {
+  PageLoginRoute: PageLoginRoute,
+  PageSignupRoute: PageSignupRoute,
+  PageIndexRoute: PageIndexRoute,
+}
+
+const PageRouteWithChildren = PageRoute._addFileChildren(PageRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  PageRoute: PageRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
