@@ -3,6 +3,7 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import * as React from "react";
 
+import { NotFound } from "@/components/not-found";
 import appCss from "@/styles/app.css?url";
 
 export const Route = createRootRoute({
@@ -25,6 +26,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  notFoundComponent: () => <NotFound />,
 });
 
 function RootComponent() {

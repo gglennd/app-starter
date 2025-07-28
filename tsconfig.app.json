@@ -20,11 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "erasableSyntaxOnly": true,
     "skipLibCheck": true,
     "noUncheckedSideEffectImports": true
-
   },
   "include": ["src"]
 }

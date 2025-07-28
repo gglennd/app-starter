@@ -11,7 +11,7 @@ export default defineConfig({
   },
   plugins: [
     tsconfigPaths(),
-    tanstackStart({ customViteReactPlugin: true, target: "node-server", tsr: { target: "react" } }),
+    tanstackStart({ customViteReactPlugin: true, target: "node-server" }),
     react(),
     tailwindcss(),
   ],

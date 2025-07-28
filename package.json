@@ -5,9 +5,9 @@
   "packageManager": "pnpm@10.6.5",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build && tsc --noEmit",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.130.1",
